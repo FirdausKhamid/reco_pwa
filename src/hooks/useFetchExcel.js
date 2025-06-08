@@ -35,7 +35,7 @@ export default function useFetchExcel() {
 
       // Locally update without re-fetch
       setExcelData((prev) => ({
-        amount: (parseFloat(prev.amount || 0) + parseFloat(amount)).toFixed(2),
+        amount: (parseFloat(prev.amount || 0) - parseFloat(amount)).toFixed(2),
         titlesAndAmounts: [...prev.titlesAndAmounts, { title, amount }],
       }));
     } catch (err) {
