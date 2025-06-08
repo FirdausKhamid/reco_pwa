@@ -8,8 +8,14 @@ export const Home = () => {
   const [amount, setAmount] = useState("");
   const [expanded, setExpanded] = useState(false); // state to track expanded view
 
-  const { excelData, loading, error, fetchExcelData, postExpenseData } =
-    useFetchExcel();
+  const {
+    excelData,
+    loadingFetch,
+    loadingPost,
+    error,
+    fetchExcelData,
+    postExpenseData,
+  } = useFetchExcel();
 
   useEffect(() => {
     fetchExcelData(month);
@@ -48,10 +54,19 @@ export const Home = () => {
           }}
         />
       </p>
-      {loading ? (
+      {loadingFetch ? (
         <h2 className="title-number">Loading...</h2>
       ) : (
-        <h2 className="title-number">RM {totalBalance ?? "0.00"}</h2>
+        <div className="flex-center-row items-center gap-sm">
+          <h2 className="title-number">RM {totalBalance ?? "0.00"}</h2>
+          <span
+            onClick={() => fetchExcelData(month)}
+            style={{ cursor: "pointer", fontSize: "1.5rem" }}
+            title="Refresh"
+          >
+            🔄
+          </span>
+        </div>
       )}
 
       {error && <p style={{ color: "red" }}>{error}</p>}
@@ -94,6 +109,7 @@ export const Home = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
+              disabled={loadingPost}
             />
           </div>
           <div>
@@ -103,10 +119,15 @@ export const Home = () => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
+              disabled={loadingPost}
             />
           </div>
-          <button type="submit" className="button-solid-md">
-            Add Expense
+          <button
+            type="submit"
+            className="button-solid-md"
+            disabled={loadingPost}
+          >
+            {loadingPost ? "Adding " : "Add Expense"}
           </button>
         </form>
       </Card>
